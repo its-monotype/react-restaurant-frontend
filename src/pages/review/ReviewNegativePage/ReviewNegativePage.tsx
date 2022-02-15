@@ -69,7 +69,7 @@ const ReviewNegativePage: React.FC = () => {
 	return (
 		<div>
 			<div className='block text-gray-800 text-xl font-extrabold text-center mb-8'>
-				Печалька ебаная! Пожалуйста, напишите почему
+				Печалька! Пожалуйста, напишите почему
 			</div>
 			<form onSubmit={handleSubmit(onSubmit)} className='mb-4'>
 				<FormControl className='mb-8' invalid={Boolean(errors.name)}>
