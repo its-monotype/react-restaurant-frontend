@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const http = axios.create({
-	baseURL: 'http://localhost:3001',
+	baseURL: 'https://restaurant-api.olmax.site',
 	headers: {
 		'Content-type': 'application/json',
 	},
