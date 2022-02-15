@@ -1,7 +1,8 @@
 export interface IClient {
-	name: string;
+	id: string;
+	name: string | null;
 	reviews: IReview[];
-	tableNum: string;
+	tableNum: string | null;
 }
 
 export interface IWaiter {

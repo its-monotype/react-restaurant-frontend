@@ -3,19 +3,22 @@ import Button from '../../../components/shared/Button';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { RouteNames } from '../../../components/router/AppRouter';
 import { ClientContext } from '../../../context/ClientContext';
+import DataService from '../../../services/dataService';
 
 const HomePage = () => {
 	const [searchParams] = useSearchParams();
-	const { setClient } = React.useContext(ClientContext);
+	const { setTableNum, setClientId } = React.useContext(ClientContext);
 
 	React.useEffect(() => {
+		const createClient = async (tableNum: string) => {
+			const response = await DataService.createClient(tableNum);
+			setTableNum(tableNum);
+			setClientId(response.data.id);
+		};
+
 		let tableNum = searchParams.get('table');
 		if (tableNum !== null) {
-			setClient({
-				name: 'John',
-				reviews: [],
-				tableNum,
-			});
+			createClient(tableNum);
 		}
 	}, []);
 

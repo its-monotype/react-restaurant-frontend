@@ -11,16 +11,19 @@ import { Input } from '../../../components/shared/Form/Input';
 import { TextArea } from '../../../components/shared/Form/TextArea';
 import { ClientContext } from '../../../context/ClientContext';
 import { ReviewFormSchema } from '../../../utils/validations';
+import DataService from '../../../services/dataService';
 
 interface IFormData {
 	name: string;
 	phone: string;
 	content: string;
+	table: string;
 }
 
 const ReviewNegativePage: React.FC = () => {
-	const { client, setClient } = React.useContext(ClientContext);
+	const { tableNum, clientId, setClientId } = React.useContext(ClientContext);
 	const [loading, setLoading] = React.useState(false);
+	const [isNeedTable, setIsNeedTable] = React.useState(false);
 
 	const {
 		register,
@@ -32,13 +35,29 @@ const ReviewNegativePage: React.FC = () => {
 	});
 
 	const onSubmit = async (data: IFormData) => {
-		const { name, phone, content } = data;
+		const { name, phone, content, table } = data;
 		setLoading(true);
-		setTimeout(() => {
-			alert(JSON.stringify(data));
-			setLoading(false);
-			navigate(RouteNames.REVIEW_NEGATIVE_DONE);
-		}, 500);
+		if (clientId !== null && tableNum !== null) {
+			try {
+				await DataService.negativeReview(clientId, tableNum, name, phone, content);
+				navigate(RouteNames.REVIEW_NEGATIVE_DONE);
+			} catch (err) {
+				alert(`Ошибка при отправке запроса: ${err}`);
+			}
+		} else if (!isNeedTable || !table) {
+			setIsNeedTable(true);
+		} else {
+			const createResponse = await DataService.createClient(table);
+			setClientId(createResponse.data.id);
+			const id = createResponse.data.id;
+			try {
+				await DataService.negativeReview(id, table, name, phone, content);
+				navigate(RouteNames.REVIEW_NEGATIVE_DONE);
+			} catch (err) {
+				alert(`Ошибка при отправке запроса: ${err}`);
+			}
+		}
+		setLoading(false);
 	};
 
 	const navigate = useNavigate();
@@ -74,6 +93,16 @@ const ReviewNegativePage: React.FC = () => {
 					<TextArea className='h-40' {...register('content')} />
 					{errors.content && <FormErrorMessage>{errors.content.message}</FormErrorMessage>}
 				</FormControl>
+
+				{isNeedTable && (
+					<FormControl className='mb-8' invalid={Boolean(errors.table)}>
+						<FormLabel className='text-lg font-extrabold text-red-600 mb-3'>
+							Пожалуйста, укажите норме столика
+						</FormLabel>
+						<Input type='number' {...register('table')} />
+						{errors.table && <FormErrorMessage>{errors.table.message}</FormErrorMessage>}
+					</FormControl>
+				)}
 
 				<Button loading={loading} type='submit' className='w-full'>
 					Отправить отзыв

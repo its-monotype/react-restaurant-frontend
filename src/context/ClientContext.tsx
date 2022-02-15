@@ -1,18 +1,26 @@
 import React from 'react';
-import { IClient } from '../utils/types';
 
 export type ClientContextType = {
-	client: IClient | null;
-	setClient: (Client: IClient) => void;
+	tableNum: string | null;
+	clientId: string | null;
+	setTableNum: (tableNum: string) => void;
+	setClientId: (clientId: string) => void;
 };
 
 export const ClientContext = React.createContext<ClientContextType>({
-	client: null,
-	setClient: (client) => console.warn('no client provider'),
+	tableNum: null,
+	clientId: null,
+	setTableNum: (tableNum) => console.warn('no tableNum provider'),
+	setClientId: (clientId) => console.warn('no clientId provider'),
 });
 
 export const ClientProvider: React.FC = ({ children }) => {
-	const [client, setClient] = React.useState<IClient | null>(null);
+	const [tableNum, setTableNum] = React.useState<string | null>(null);
+	const [clientId, setClientId] = React.useState<string | null>(null);
 
-	return <ClientContext.Provider value={{ client, setClient }}>{children}</ClientContext.Provider>;
+	return (
+		<ClientContext.Provider value={{ tableNum, clientId, setTableNum, setClientId }}>
+			{children}
+		</ClientContext.Provider>
+	);
 };

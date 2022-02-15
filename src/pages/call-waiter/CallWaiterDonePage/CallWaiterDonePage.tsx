@@ -6,7 +6,7 @@ import { ClientContext } from '../../../context/ClientContext';
 import Timer from './StopWatch';
 
 const CallWaiterDonePage = () => {
-	const { client } = React.useContext(ClientContext);
+	const { tableNum } = React.useContext(ClientContext);
 	const navigate = useNavigate();
 
 	const handleBackClick = () => {
@@ -17,7 +17,7 @@ const CallWaiterDonePage = () => {
 		<div>
 			<div className='mb-8'>
 				<div className='block text-gray-800 text-xl font-extrabold text-center'>
-					Зовем официанта к вашему столику #{client?.tableNum}
+					Зовем официанта к вашему столику #{tableNum}
 				</div>
 				<Timer />
 			</div>

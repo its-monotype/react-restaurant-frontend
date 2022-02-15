@@ -10,10 +10,11 @@ import { Input } from '../../../components/shared/Form/Input';
 import { FormLabel } from '../../../components/shared/Form/FormLabel';
 import { FormControl } from '../../../components/shared/Form/FormControl';
 import { FormErrorMessage } from '../../../components/shared/Form/FormErrorMessage';
+import DataService from '../../../services/dataService';
 import { ClientContext } from '../../../context/ClientContext';
 
 const CallWaiterPage = () => {
-	const { client, setClient } = React.useContext(ClientContext);
+	const { clientId, tableNum, setClientId, setTableNum } = React.useContext(ClientContext);
 	const [loading, setLoading] = React.useState(false);
 
 	const {
@@ -22,7 +23,7 @@ const CallWaiterPage = () => {
 		handleSubmit,
 	} = useForm({
 		defaultValues: {
-			tableNum: client?.tableNum,
+			tableNum,
 		},
 		mode: 'onSubmit',
 		resolver: yupResolver(TableFormSchema),
@@ -31,23 +32,18 @@ const CallWaiterPage = () => {
 	const onSubmit = async (data: any) => {
 		const { tableNum } = data;
 		setLoading(true);
-		setTimeout(() => {
-			if (client !== null && tableNum !== client?.tableNum) {
-				// обновляем столик клиента в БД
-				console.log(`обновляем столик клиента в БД c ${client?.tableNum} на ${tableNum}`);
-				setClient(Object.assign(client, { tableNum }));
-			} else {
-				// создаем клиента в БД
-				setClient({
-					name: 'John',
-					reviews: [],
-					tableNum,
-				});
-			}
-			alert(JSON.stringify(data));
-			setLoading(false);
-			navigate(RouteNames.CALL_WAITER_DONE);
-		}, 500);
+		let id;
+		if (clientId === null) {
+			const response = await DataService.createClient(tableNum);
+			setClientId(response.data.id);
+			id = response.data.id;
+		} else {
+			id = clientId;
+		}
+		await DataService.callWaiter(id, tableNum);
+		setTableNum(tableNum);
+		setLoading(false);
+		navigate(RouteNames.CALL_WAITER_DONE);
 	};
 
 	const navigate = useNavigate();
