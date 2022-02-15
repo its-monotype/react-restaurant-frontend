@@ -11,9 +11,13 @@ const HomePage = () => {
 
 	React.useEffect(() => {
 		const createClient = async (tableNum: string) => {
-			const response = await DataService.createClient(tableNum);
-			setTableNum(tableNum);
-			setClientId(response.data.id);
+			try {
+				const response = await DataService.createClient(tableNum);
+				setTableNum(tableNum);
+				setClientId(response.data.id);
+			} catch (err) {
+				alert(`Ошибка при отправке запроса: ${err}`);
+			}
 		};
 
 		let tableNum = searchParams.get('table');

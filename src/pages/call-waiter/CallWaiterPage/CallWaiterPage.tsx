@@ -34,16 +34,27 @@ const CallWaiterPage = () => {
 		setLoading(true);
 		let id;
 		if (clientId === null) {
-			const response = await DataService.createClient(tableNum);
+			let response;
+			try {
+				response = await DataService.createClient(tableNum);
+			} catch (err) {
+				alert(`Ошибка при отправке запроса: ${err}`);
+				return;
+			}
 			setClientId(response.data.id);
 			id = response.data.id;
 		} else {
 			id = clientId;
 		}
-		await DataService.callWaiter(id, tableNum);
-		setTableNum(tableNum);
-		setLoading(false);
-		navigate(RouteNames.CALL_WAITER_DONE);
+		try {
+			await DataService.callWaiter(id, tableNum);
+			setTableNum(tableNum);
+			setLoading(false);
+			navigate(RouteNames.CALL_WAITER_DONE);
+		} catch (err) {
+			alert(`Ошибка при отправке запроса: ${err}`);
+			return;
+		}
 	};
 
 	const navigate = useNavigate();
