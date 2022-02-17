@@ -12,6 +12,8 @@ import { TextArea } from '../../../components/shared/Form/TextArea';
 import { ClientContext } from '../../../context/ClientContext';
 import { ReviewFormSchema } from '../../../utils/validations';
 import DataService from '../../../services/dataService';
+import axios from 'axios';
+const config = require('../../../config.json');
 
 interface IFormData {
 	name: string;
@@ -51,7 +53,7 @@ const ReviewNegativePage: React.FC = () => {
 			setClientId(createResponse.data.id);
 			const id = createResponse.data.id;
 			try {
-				await DataService.negativeReview(id, table, name, phone, content);
+				axios.post(`${config.API_URL}/call-waiter`, { data: { id, table, name, phone, content } });
 				navigate(RouteNames.REVIEW_NEGATIVE_DONE);
 			} catch (err) {
 				alert(`Ошибка при отправке запроса: ${err}`);

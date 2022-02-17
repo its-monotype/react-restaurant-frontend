@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { RouteNames } from '../../../components/router/AppRouter';
 import Button from '../../../components/shared/Button';
@@ -12,6 +13,7 @@ import { FormControl } from '../../../components/shared/Form/FormControl';
 import { FormErrorMessage } from '../../../components/shared/Form/FormErrorMessage';
 import DataService from '../../../services/dataService';
 import { ClientContext } from '../../../context/ClientContext';
+const config = require('../../../config.json');
 
 const CallWaiterPage = () => {
 	const { clientId, tableNum, setClientId, setTableNum } = React.useContext(ClientContext);
@@ -47,7 +49,7 @@ const CallWaiterPage = () => {
 			id = clientId;
 		}
 		try {
-			await DataService.callWaiter(id, tableNum);
+			axios.post(`${config.API_URL}/call-waiter`, { data: { id, tableNum } });
 			setTableNum(tableNum);
 			setLoading(false);
 			navigate(RouteNames.CALL_WAITER_DONE);
