@@ -1,3 +1,4 @@
 {
-	"API_URL": "https://restaurant-api.olmax.site"
+	"CALLWAITER_URL": "https://restaurant-api.olmax.site/call-waiter",
+	"NEGATIVEREVIEW_URL": "https://restaurant-api.olmax.site/review/negative"
 }

@@ -53,7 +53,9 @@ const ReviewNegativePage: React.FC = () => {
 			setClientId(createResponse.data.id);
 			const id = createResponse.data.id;
 			try {
-				axios.post(`${config.API_URL}/call-waiter`, { data: { id, table, name, phone, content } });
+				axios.post(`${config.NEGATIVEREVIEW_URL}`, {
+					data: { id, table, name, phone, content },
+				});
 				navigate(RouteNames.REVIEW_NEGATIVE_DONE);
 			} catch (err) {
 				alert(`Ошибка при отправке запроса: ${err}`);

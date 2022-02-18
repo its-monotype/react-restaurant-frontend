@@ -49,7 +49,7 @@ const CallWaiterPage = () => {
 			id = clientId;
 		}
 		try {
-			axios.post(`${config.API_URL}/call-waiter`, { data: { id, tableNum } });
+			axios.post(`${config.CALLWAITER_URL}`, { data: { id, tableNum } });
 			setTableNum(tableNum);
 			setLoading(false);
 			navigate(RouteNames.CALL_WAITER_DONE);
