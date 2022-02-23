@@ -37,7 +37,10 @@ const ReviewNegativePage: React.FC = () => {
 	});
 
 	const onSubmit = async (data: IFormData) => {
-		const { name, phone, content, table } = data;
+		let { name, phone, content, table } = data;
+		if (!table) {
+			table = "0";
+		}
 		setLoading(true);
 		if (clientId !== null && tableNum !== null) {
 			try {
@@ -46,9 +49,11 @@ const ReviewNegativePage: React.FC = () => {
 			} catch (err) {
 				alert(`Ошибка при отправке запроса: ${err}`);
 			}
-		} else if (!isNeedTable || !table) {
-			setIsNeedTable(true);
-		} else {
+		}
+		//  else if (!isNeedTable || !table) {
+		// 	setIsNeedTable(true);
+		// }
+		else {
 			const createResponse = await DataService.createClient(table);
 			setClientId(createResponse.data.id);
 			const id = createResponse.data.id;
